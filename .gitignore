@@ -3,7 +3,7 @@ target/
 
 # Local database credentials (never commit)
 src/main/resources/db.properties
-db.properties
+
 
 # IDE and operating-system files
 .idea/
