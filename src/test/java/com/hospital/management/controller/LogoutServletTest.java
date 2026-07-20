@@ -1,0 +1,3 @@
+package com.hospital.management.controller;
+import com.hospital.management.dao.AuditLogDao;import org.junit.jupiter.api.Test;import javax.servlet.http.*;import static org.mockito.Mockito.*;
+class LogoutServletTest {@Test void invalidatesAndRedirects()throws Exception{HttpServletRequest q=mock(HttpServletRequest.class);HttpServletResponse r=mock(HttpServletResponse.class);HttpSession s=mock(HttpSession.class);when(q.getSession(false)).thenReturn(s);when(q.getContextPath()).thenReturn("/app");new LogoutServlet(mock(AuditLogDao.class)).doPost(q,r);verify(s).invalidate();verify(r).sendRedirect("/app/login?logout=success");}}

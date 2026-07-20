@@ -1,0 +1,3 @@
+package com.hospital.management.util;
+import org.junit.jupiter.api.Test;import javax.servlet.http.HttpSession;import static org.junit.jupiter.api.Assertions.*;import static org.mockito.Mockito.*;
+class CsrfTokenUtilTest {@Test void createsAndValidatesToken(){HttpSession s=mock(HttpSession.class);final Object[] stored={null};doAnswer(i->{stored[0]=i.getArgument(1);return null;}).when(s).setAttribute(eq("csrfToken"),any());when(s.getAttribute("csrfToken")).thenAnswer(i->stored[0]);String t=CsrfTokenUtil.getOrCreateToken(s);assertFalse(t.isBlank());assertTrue(CsrfTokenUtil.validate(s,t));assertFalse(CsrfTokenUtil.validate(s,"bad"));}}

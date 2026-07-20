@@ -145,7 +145,22 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Logging and database configuration templates added
 - Initial Oracle schema, reference seed data, and safe cleanup script added
 - Reusable HikariCP connection manager and database health endpoint added
-- Authentication and hospital business functionality not yet implemented
+- BCrypt login/logout, session renewal, five-attempt account locking, CSRF protection, security headers, audit events, and server-side role authorization added
+- Hospital business modules beyond authentication are not yet implemented
+
+## Authentication setup
+
+Generate BCrypt hashes locally (the helper is not run by JUnit), replace only the placeholders in `database/create-demo-users.sql`, and execute that script as `HOSPITAL_APP` after schema and seed data. Never commit plaintext or known demo credentials.
+
+```powershell
+mvn -q -Dexec.mainClass=com.hospital.management.util.PasswordHashGenerator -Dexec.classpathScope=test test-compile exec:java -Dexec.args="YOUR_LOCAL_INPUT"
+```
+
+Login: `http://localhost:8080/online-hospital-management-system/login`
+
+Dashboard: `http://localhost:8080/online-hospital-management-system/dashboard`
+
+Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse/*`, `/reception/*`, `/patient/*`, and `/billing/*`. ADMIN is accepted across all role areas. Security includes BCrypt, generic login errors, session renewal, 30-minute expiry, CSRF tokens, anti-caching/CSP headers, account locking, and audit events. Plain-text password storage is prohibited.
 
 ## Planned modules
 

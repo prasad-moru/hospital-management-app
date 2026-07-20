@@ -1,0 +1,13 @@
+flowchart LR
+  B[Browser] --> L[LoginServlet]
+  L --> S[AuthenticationService]
+  S --> D[UserDao]
+  D --> O[(Oracle USERS / ROLES)]
+  O --> D --> S
+  S --> P{BCrypt verifies?}
+  P -->|Yes| X[Reset attempts and create safe session]
+  X --> DB[Dashboard]
+  P -->|No| F[Increment failed attempts]
+  F --> Q{Five failures?}
+  Q -->|Yes| K[Lock account]
+  Q -->|No| L

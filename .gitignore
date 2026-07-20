@@ -2,7 +2,7 @@
 target/
 
 # Local database credentials (never commit)
-src/main/resources/db.properties
+
 
 
 # IDE and operating-system files

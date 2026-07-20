@@ -22,9 +22,12 @@
                         A centralized platform designed to simplify hospital operations and improve the
                         experience of patients, doctors, and administrative staff.
                     </p>
-                    <button type="button" class="btn btn-light btn-lg px-4" disabled aria-disabled="true">
-                        Login - Coming Soon
-                    </button>
+                    <% if (session.getAttribute("authenticatedUser") == null) { %>
+                    <a class="btn btn-light btn-lg px-4" href="${pageContext.request.contextPath}/login">Login</a>
+                    <% } else { %>
+                    <a class="btn btn-light btn-lg px-4" href="${pageContext.request.contextPath}/dashboard">Dashboard</a>
+                    <form class="d-inline" method="post" action="${pageContext.request.contextPath}/logout"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"><button class="btn btn-outline-light btn-lg">Logout</button></form>
+                    <% } %>
                 </div>
                 <div class="col-lg-5">
                     <div class="feature-card p-4 p-md-5">
