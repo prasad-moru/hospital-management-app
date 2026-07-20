@@ -1,0 +1,6 @@
+db.url=jdbc:oracle:thin:@localhost:1521/XEPDB1
+db.username=YOUR_DATABASE_USERNAME
+db.password=YOUR_DATABASE_PASSWORD
+db.driver=oracle.jdbc.OracleDriver
+db.pool.maximumPoolSize=10
+db.pool.minimumIdle=2

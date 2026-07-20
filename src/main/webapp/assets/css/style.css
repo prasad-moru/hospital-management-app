@@ -1,0 +1,33 @@
+:root {
+    --hospital-primary: #0d6efd;
+    --hospital-deep-blue: #084298;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+main {
+    flex: 1;
+}
+
+.hero-section {
+    min-height: 70vh;
+    color: #fff;
+    background: linear-gradient(135deg, var(--hospital-primary), var(--hospital-deep-blue));
+}
+
+.feature-card {
+    color: #212529;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 1rem;
+    box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.18);
+}

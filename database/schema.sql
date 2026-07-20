@@ -1,0 +1,2 @@
+-- Online Hospital Management System database schema.
+-- Hospital tables will be defined in a later implementation phase.

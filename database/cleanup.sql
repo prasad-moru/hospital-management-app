@@ -1,0 +1,2 @@
+-- Online Hospital Management System database cleanup.
+-- Cleanup statements will be added after the database tables are defined in a later phase.

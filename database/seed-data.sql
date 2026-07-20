@@ -1,0 +1,2 @@
+-- Online Hospital Management System seed data.
+-- Seed records will be added after the database tables are defined in a later phase.
