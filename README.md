@@ -14,7 +14,7 @@ An MCA final-semester academic project that will provide a centralized web appli
 - SLF4J and Logback
 - JUnit 5 and Mockito
 
-This project intentionally does not use Spring Boot, Hibernate, JPA, or `jakarta.servlet`.
+This project intentionally avoids application frameworks and uses the Tomcat 9 Java EE servlet namespace.
 
 ## Prerequisites
 
@@ -81,13 +81,60 @@ Tomcat 9 is required because this application targets Servlet 4.0 and the `javax
 
 ## Database configuration
 
-The committed file `src/main/resources/db.properties.example` documents the required Oracle connection settings. Before database functionality is introduced:
+The application connects to Oracle XE 21c through the dedicated, least-privilege `HOSPITAL_APP` schema and one application-wide HikariCP connection pool. It must never connect as Oracle `SYSTEM`. The committed `src/main/resources/db.properties.example` is a safe template; the local `db.properties` file is ignored by Git.
 
-1. Copy it to `src/main/resources/db.properties`.
-2. Replace the placeholders with local database credentials.
-3. Keep the new file private; `db.properties` is excluded by `.gitignore`.
+### Oracle and application setup
 
-Credentials must never be committed or hardcoded. JDBC connections will be managed through HikariCP when the data-access phase begins.
+Perform these steps in order:
+
+1. Start the Oracle container.
+2. Connect to XEPDB1 as an administrative user.
+3. Update and run `database/create-app-user.sql`.
+4. Reconnect as HOSPITAL_APP.
+5. Run `database/cleanup.sql` when resetting an existing schema.
+6. Run `database/schema.sql`.
+7. Run `database/seed-data.sql`.
+8. Copy `db.properties.example` to `db.properties`.
+9. Replace only the local password in `db.properties`.
+10. Never commit `db.properties`.
+11. Run `mvn clean test`.
+12. Run `mvn clean package`.
+13. Deploy the WAR to Tomcat 9.
+14. Test `/health/database`.
+
+Example SQL*Plus commands (replace placeholders locally; do not store a real password in shell history or source files):
+
+```text
+sqlplus ADMIN_USER@//localhost:1521/XEPDB1
+@database/create-app-user.sql
+
+sqlplus HOSPITAL_APP@//localhost:1521/XEPDB1
+@database/cleanup.sql
+@database/schema.sql
+@database/seed-data.sql
+```
+
+Create the local runtime configuration from the project root:
+
+```powershell
+Copy-Item src/main/resources/db.properties.example src/main/resources/db.properties
+```
+
+Edit only `db.password` in that copied file. Verify it remains ignored before building:
+
+```bash
+git check-ignore src/main/resources/db.properties
+mvn clean test
+mvn clean package
+```
+
+After deploying `target/online-hospital-management-system.war` to Tomcat 9, check:
+
+```text
+http://localhost:8080/online-hospital-management-system/health/database
+```
+
+The endpoint returns only `UP` or `DOWN` JSON and never exposes connection details. See [Database Design](docs/requirements/database-design.md) for schema decisions, relationships, constraints, indexes, and security policy.
 
 ## Current implementation status
 
@@ -96,7 +143,8 @@ Credentials must never be committed or hardcoded. JDBC connections will be manag
 - Responsive Bootstrap landing page created
 - Custom 404 and 500 pages configured
 - Logging and database configuration templates added
-- Database SQL placeholders added
+- Initial Oracle schema, reference seed data, and safe cleanup script added
+- Reusable HikariCP connection manager and database health endpoint added
 - Authentication and hospital business functionality not yet implemented
 
 ## Planned modules
