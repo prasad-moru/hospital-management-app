@@ -1,0 +1,15 @@
+flowchart TD
+  U[ADMIN / DOCTOR / PATIENT] --> C[Medical Record Servlet]
+  C --> S[MedicalRecordService]
+  S --> O{Role and ownership?}
+  O -- No --> D[403-safe response + access audit]
+  O -- Yes --> A[AppointmentDao]
+  A --> E{CONFIRMED or COMPLETED?}
+  E -- No --> B[Creation blocked + audit]
+  E -- Yes --> Q{Record already exists?}
+  Q -- Yes --> DUP[Duplicate response]
+  Q -- No --> M[MedicalRecordDao transaction]
+  M --> DB[(Oracle XE)]
+  S --> DR[DoctorDao]
+  S --> PR[PatientDao]
+  PR --> RO[Patient read-only view]

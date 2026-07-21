@@ -151,6 +151,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Patient Management implemented for ADMIN and RECEPTIONIST with optional linked login accounts
 - Doctor Schedule Management implemented for ADMIN and owning DOCTOR users
 - Appointment Management implemented with role/ownership enforcement, schedule-derived slots, conflict prevention, status workflow, and audit events
+- Medical Record and Diagnosis Management implemented with appointment eligibility, doctor/patient ownership, vital-sign validation, and one record per appointment
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -178,6 +179,12 @@ Doctor Schedule Management: `http://localhost:8080/online-hospital-management-sy
 
 Appointment Management: `http://localhost:8080/online-hospital-management-system/appointments`
 
+Medical Records: `http://localhost:8080/online-hospital-management-system/medical-records`
+
+ADMIN can manage all medical records, DOCTOR can manage records for assigned appointments, and PATIENT has read-only access to their own records. New records require a `CONFIRMED` or `COMPLETED` appointment and inherit patient/doctor identity from it. Oracle constraint `UK_MED_REC_APPT` prevents more than one record per appointment.
+
+Existing databases should run `database/migrations/V008__medical_record_management.sql` once as `HOSPITAL_APP`. Fresh schemas already contain these indexes.
+
 Available slots JSON: `http://localhost:8080/online-hospital-management-system/appointments/slots?doctorId=DOCTOR_ID&appointmentDate=YYYY-MM-DD`
 
 ADMIN has full appointment access. RECEPTIONIST can book and coordinate appointments. DOCTOR sees only assigned appointments and may perform permitted clinical status transitions. PATIENT sees, books, reschedules, and cancels only their own appointments. Slots are generated from active doctor schedules, elapsed/booked slots are excluded, and the server recalculates the end time. Bound conflict queries plus an Oracle conditional unique index prevent active double-booking. Status transitions are `SCHEDULED` to `CONFIRMED`/`CANCELLED`, then `CONFIRMED` to `COMPLETED`/`CANCELLED`/`NO_SHOW`.
@@ -204,7 +211,6 @@ Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse
 - Patient management
 - Doctor clinical workspace, schedules, and appointment workflow
 - Department management
-- Medical records
 - Prescriptions
 - Billing and payments
 - Admission and discharge
