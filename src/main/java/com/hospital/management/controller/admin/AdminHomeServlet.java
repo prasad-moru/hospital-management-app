@@ -1,0 +1,2 @@
+package com.hospital.management.controller.admin;import javax.servlet.*;import javax.servlet.annotation.WebServlet;import javax.servlet.http.*;import java.io.IOException;
+@WebServlet(urlPatterns={"/admin","/admin/"})public class AdminHomeServlet extends HttpServlet{protected void doGet(HttpServletRequest q,HttpServletResponse r)throws ServletException,IOException{if(q.getServletPath().equals("/admin")){r.sendRedirect(q.getContextPath()+"/admin/");return;}q.getRequestDispatcher("/WEB-INF/views/admin/index.jsp").forward(q,r);}}

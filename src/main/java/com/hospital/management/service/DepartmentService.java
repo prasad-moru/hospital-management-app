@@ -1,0 +1,2 @@
+package com.hospital.management.service;import com.hospital.management.model.*;import java.util.Optional;
+public interface DepartmentService{Page<Department> listDepartments(PageRequest r);Optional<Department> getDepartment(Long id);ServiceResult<Long> createDepartment(Department d,AuditContext a);ServiceResult<Void> updateDepartment(Department d,AuditContext a);ServiceResult<Void> activateDepartment(Long id,AuditContext a);ServiceResult<Void> deactivateDepartment(Long id,AuditContext a);}

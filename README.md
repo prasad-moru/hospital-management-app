@@ -146,6 +146,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Initial Oracle schema, reference seed data, and safe cleanup script added
 - Reusable HikariCP connection manager and database health endpoint added
 - BCrypt login/logout, session renewal, five-attempt account locking, CSRF protection, security headers, audit events, and server-side role authorization added
+- Admin landing page and Department Management CRUD implemented
 - Hospital business modules beyond authentication are not yet implemented
 
 ## Authentication setup
@@ -159,6 +160,12 @@ mvn -q -Dexec.mainClass=com.hospital.management.util.PasswordHashGenerator -Dexe
 Login: `http://localhost:8080/online-hospital-management-system/login`
 
 Dashboard: `http://localhost:8080/online-hospital-management-system/dashboard`
+
+Admin dashboard: `http://localhost:8080/online-hospital-management-system/admin/`
+
+Department Management: `http://localhost:8080/online-hospital-management-system/admin/departments`
+
+ADMIN users can search, page, add, view, edit, activate, and deactivate departments. Departments are never deleted. Deactivation is blocked while active doctors are assigned.
 
 Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse/*`, `/reception/*`, `/patient/*`, and `/billing/*`. ADMIN is accepted across all role areas. Security includes BCrypt, generic login errors, session renewal, 30-minute expiry, CSRF tokens, anti-caching/CSP headers, account locking, and audit events. Plain-text password storage is prohibited.
 

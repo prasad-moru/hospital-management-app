@@ -1,0 +1,12 @@
+flowchart LR
+  A[Admin] --> H[AdminHomeServlet]
+  H --> L[DepartmentListServlet]
+  L --> S[DepartmentService]
+  C[Create Servlet] --> S
+  E[Edit Servlet] --> S
+  T[Activate / Deactivate Servlet] --> S
+  S --> D[DepartmentDao]
+  D --> O[(Oracle DEPARTMENTS)]
+  T --> Q{Active doctors assigned?}
+  Q -->|Yes| X[Conflict message]
+  Q -->|No| D

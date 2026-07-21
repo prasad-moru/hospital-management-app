@@ -1,0 +1,3 @@
+package com.hospital.management.dao;
+import com.hospital.management.model.*;import java.sql.SQLException;import java.util.Optional;
+public interface DepartmentDao{Optional<Department> findById(Long id)throws SQLException;Optional<Department> findByName(String name)throws SQLException;Page<Department> findAll(PageRequest r)throws SQLException;long count(String search)throws SQLException;long create(Department d)throws SQLException;boolean update(Department d)throws SQLException;boolean updateStatus(Long id,String status)throws SQLException;boolean existsByName(String n)throws SQLException;boolean existsByNameExcludingId(String n,Long id)throws SQLException;boolean hasActiveDoctors(Long id)throws SQLException;}

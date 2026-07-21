@@ -1,0 +1,4 @@
+package com.hospital.management.model;
+import java.util.List;
+/** Immutable framework-independent page of results. */
+public final class Page<T>{private final List<T> content;private final int pageNumber,pageSize,totalPages;private final long totalElements;private final boolean first,last;public Page(List<T> c,int n,int s,long total){if(n<1||s<1)throw new IllegalArgumentException("Invalid page");content=List.copyOf(c);pageNumber=n;pageSize=s;totalElements=total;totalPages=(int)Math.ceil((double)total/s);first=n==1;last=totalPages==0||n>=totalPages;}public List<T> getContent(){return content;}public int getPageNumber(){return pageNumber;}public int getPageSize(){return pageSize;}public long getTotalElements(){return totalElements;}public int getTotalPages(){return totalPages;}public boolean isFirst(){return first;}public boolean isLast(){return last;}}

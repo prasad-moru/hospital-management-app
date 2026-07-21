@@ -1,0 +1,2 @@
+package com.hospital.management.controller.admin;import com.hospital.management.model.Department;import javax.servlet.http.HttpServletRequest;
+final class Form{private Form(){}static Long id(String v){try{long n=Long.parseLong(v);return n>0?n:null;}catch(Exception e){return null;}}static Department department(HttpServletRequest q,Long id){return new Department(id,q.getParameter("departmentName"),q.getParameter("description"),q.getParameter("location"),q.getParameter("status"));}}
