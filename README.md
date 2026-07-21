@@ -1,6 +1,6 @@
 # Online Hospital Management System
 
-An MCA final-semester academic project providing a secure, maintainable web application for hospital administration. Authentication, Department Management, and ADMIN Doctor Management are implemented.
+An MCA final-semester academic project providing a secure, maintainable web application for hospital administration. Authentication, core administration, Doctor Schedules, and Appointment Management are implemented.
 
 ## Technology stack
 
@@ -150,6 +150,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - ADMIN Doctor Management implemented with list, search, filters, pagination, add, view, edit, activation, and deactivation
 - Patient Management implemented for ADMIN and RECEPTIONIST with optional linked login accounts
 - Doctor Schedule Management implemented for ADMIN and owning DOCTOR users
+- Appointment Management implemented with role/ownership enforcement, schedule-derived slots, conflict prevention, status workflow, and audit events
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -175,6 +176,14 @@ Patient Management: `http://localhost:8080/online-hospital-management-system/adm
 
 Doctor Schedule Management: `http://localhost:8080/online-hospital-management-system/schedules`
 
+Appointment Management: `http://localhost:8080/online-hospital-management-system/appointments`
+
+Available slots JSON: `http://localhost:8080/online-hospital-management-system/appointments/slots?doctorId=DOCTOR_ID&appointmentDate=YYYY-MM-DD`
+
+ADMIN has full appointment access. RECEPTIONIST can book and coordinate appointments. DOCTOR sees only assigned appointments and may perform permitted clinical status transitions. PATIENT sees, books, reschedules, and cancels only their own appointments. Slots are generated from active doctor schedules, elapsed/booked slots are excluded, and the server recalculates the end time. Bound conflict queries plus an Oracle conditional unique index prevent active double-booking. Status transitions are `SCHEDULED` to `CONFIRMED`/`CANCELLED`, then `CONFIRMED` to `COMPLETED`/`CANCELLED`/`NO_SHOW`.
+
+Existing databases must run `database/migrations/V007__appointment_management.sql` once as `HOSPITAL_APP`. Fresh schemas already contain the conditional active-slot index.
+
 ADMIN may manage all doctor schedules; DOCTOR users may manage only their own. Overlap is prevented for every stored window on the same doctor/day. Schedule windows must divide exactly into 5-240 minute slots. This availability foundation is intended for future Appointment Management; it does not yet book or change appointments.
 
 For an existing database created before Patient Management, run `database/migrations/V005__patient_management_adjustments.sql` once as `HOSPITAL_APP`. A fresh reset using `schema.sql` already contains those objects; do not run the migration afterward.
@@ -195,7 +204,6 @@ Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse
 - Patient management
 - Doctor clinical workspace, schedules, and appointment workflow
 - Department management
-- Appointment management
 - Medical records
 - Prescriptions
 - Billing and payments

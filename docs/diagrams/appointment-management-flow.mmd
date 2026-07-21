@@ -1,0 +1,22 @@
+flowchart TD
+  U[ADMIN / RECEPTIONIST / DOCTOR / PATIENT] --> C[Appointment Servlet]
+  C --> S[AppointmentService]
+  S --> O{Role and ownership allowed?}
+  O -- No --> X[403 / safe failure + audit]
+  O -- Yes --> A[AvailabilityService]
+  A --> SD[ScheduleDao]
+  A --> AD[AppointmentDao: booked starts]
+  A --> DD[DoctorDao]
+  SD --> G[TimeSlotGenerator]
+  G --> E[Exclude booked and elapsed slots]
+  E --> S
+  S --> PD[PatientDao]
+  S --> CF{Doctor or patient conflict?}
+  CF -- Yes --> B[Block + audit]
+  CF -- No --> TX[JDBC transaction]
+  TX --> AD
+  AD --> ORA[(Oracle XE)]
+  S --> RS[Reschedule: exclude current appointment]
+  S --> ST[Status transition state machine]
+  RS --> TX
+  ST --> TX
