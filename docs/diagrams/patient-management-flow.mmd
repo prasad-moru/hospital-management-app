@@ -1,0 +1,11 @@
+flowchart LR
+ A[Admin / Receptionist] --> S[Patient Servlet] --> V[PatientService]
+ V --> P[PatientDao] --> O[(Oracle)]
+ V --> U[UserDao] --> O
+ V --> R[RoleDao] --> O
+ C1[Create without login] --> P
+ C2[Create with login] --> T[USERS + PATIENTS transaction] --> V
+ E[Update] --> V
+ D[Deactivate] --> B{Future appointment or ADMITTED?}
+ B -->|Yes| X[Blocked + audit]
+ B -->|No| I[PATIENTS + USERS inactive transaction]

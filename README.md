@@ -148,6 +148,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - BCrypt login/logout, session renewal, five-attempt account locking, CSRF protection, security headers, audit events, and server-side role authorization added
 - Admin landing page and Department Management CRUD implemented
 - ADMIN Doctor Management implemented with list, search, filters, pagination, add, view, edit, activation, and deactivation
+- Patient Management implemented for ADMIN and RECEPTIONIST with optional linked login accounts
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -169,9 +170,15 @@ Department Management: `http://localhost:8080/online-hospital-management-system/
 
 Doctor Management: `http://localhost:8080/online-hospital-management-system/admin/doctors`
 
+Patient Management: `http://localhost:8080/online-hospital-management-system/admin/patients`
+
+For an existing database created before Patient Management, run `database/migrations/V005__patient_management_adjustments.sql` once as `HOSPITAL_APP`. A fresh reset using `schema.sql` already contains those objects; do not run the migration afterward.
+
 ADMIN users can search, page, add, view, edit, activate, and deactivate departments. Departments are never deleted. Deactivation is blocked while active doctors are assigned.
 
 ADMIN users can search and filter doctors by department/status, page results, and add, view, edit, activate, or deactivate doctor records. Creation and updates keep linked `USERS` and `DOCTORS` records atomic. Passwords are BCrypt-hashed; blank edit passwords preserve the current hash. Deactivation is blocked by scheduled/confirmed future appointments or active schedules.
+
+ADMIN and RECEPTIONIST users can manage patients. Login accounts are optional; linked account creation and patient writes are atomic and BCrypt-secured. Blank patient numbers are generated from `PATIENT_NUMBER_SEQ` as `PAT-YYYY-NNNNNN`. Deactivation is blocked by future appointments or an active admission. For demo data, locally replace the BCrypt placeholder in `database/create-demo-patient.sql` and run it as `HOSPITAL_APP` without committing the hash.
 
 For an optional demo doctor, generate a BCrypt hash locally, replace `REPLACE_WITH_BCRYPT_HASH` in `database/create-demo-doctor.sql`, and run it as `HOSPITAL_APP`. Do not commit the replacement hash and do not document the corresponding password.
 
