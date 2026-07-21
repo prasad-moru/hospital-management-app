@@ -1,6 +1,6 @@
 # Online Hospital Management System
 
-An MCA final-semester academic project that will provide a centralized web application for managing hospital operations. The current phase establishes a secure, maintainable Java web application foundation; hospital business modules have not yet been implemented.
+An MCA final-semester academic project providing a secure, maintainable web application for hospital administration. Authentication, Department Management, and ADMIN Doctor Management are implemented.
 
 ## Technology stack
 
@@ -147,8 +147,9 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Reusable HikariCP connection manager and database health endpoint added
 - BCrypt login/logout, session renewal, five-attempt account locking, CSRF protection, security headers, audit events, and server-side role authorization added
 - Admin landing page and Department Management CRUD implemented
-- Doctor Management persistence foundation in progress (models, validation, JDBC DAOs, transaction-ready user writes, role and department lookups); service and UI are pending
-- Hospital business modules beyond authentication are not yet implemented
+- ADMIN Doctor Management implemented with list, search, filters, pagination, add, view, edit, activation, and deactivation
+- Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
+- Remaining clinical and hospital operations modules are pending
 
 ## Authentication setup
 
@@ -166,7 +167,13 @@ Admin dashboard: `http://localhost:8080/online-hospital-management-system/admin/
 
 Department Management: `http://localhost:8080/online-hospital-management-system/admin/departments`
 
+Doctor Management: `http://localhost:8080/online-hospital-management-system/admin/doctors`
+
 ADMIN users can search, page, add, view, edit, activate, and deactivate departments. Departments are never deleted. Deactivation is blocked while active doctors are assigned.
+
+ADMIN users can search and filter doctors by department/status, page results, and add, view, edit, activate, or deactivate doctor records. Creation and updates keep linked `USERS` and `DOCTORS` records atomic. Passwords are BCrypt-hashed; blank edit passwords preserve the current hash. Deactivation is blocked by scheduled/confirmed future appointments or active schedules.
+
+For an optional demo doctor, generate a BCrypt hash locally, replace `REPLACE_WITH_BCRYPT_HASH` in `database/create-demo-doctor.sql`, and run it as `HOSPITAL_APP`. Do not commit the replacement hash and do not document the corresponding password.
 
 Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse/*`, `/reception/*`, `/patient/*`, and `/billing/*`. ADMIN is accepted across all role areas. Security includes BCrypt, generic login errors, session renewal, 30-minute expiry, CSRF tokens, anti-caching/CSP headers, account locking, and audit events. Plain-text password storage is prohibited.
 
@@ -174,7 +181,7 @@ Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse
 
 - Authentication and role management
 - Patient management
-- Doctor management
+- Doctor clinical workspace, schedules, and appointment workflow
 - Department management
 - Appointment management
 - Medical records

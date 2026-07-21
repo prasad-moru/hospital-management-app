@@ -1,0 +1,23 @@
+flowchart LR
+    A[Admin Browser] --> S[Doctor Servlet]
+    S --> V[DoctorService]
+    V --> DD[DoctorDao]
+    V --> UD[UserDao]
+    V --> DP[DepartmentDao]
+    V --> RD[RoleDao]
+    DD --> O[(Oracle XE)]
+    UD --> O
+    DP --> O
+    RD --> O
+
+    C[Create] --> CT[USERS + DOCTORS transaction]
+    U[Update] --> UT[USERS identity/password + DOCTORS transaction]
+    AC[Activate] --> AT[DOCTORS ACTIVE + USERS ACTIVE]
+    DE[Deactivate] --> BC{Future appointments or active schedules?}
+    BC -->|Yes| BL[Blocked + audit]
+    BC -->|No| DT[DOCTORS INACTIVE + USERS INACTIVE]
+    CT --> V
+    UT --> V
+    AT --> V
+    BL --> V
+    DT --> V
