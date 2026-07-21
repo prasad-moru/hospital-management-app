@@ -147,6 +147,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Reusable HikariCP connection manager and database health endpoint added
 - BCrypt login/logout, session renewal, five-attempt account locking, CSRF protection, security headers, audit events, and server-side role authorization added
 - Admin landing page and Department Management CRUD implemented
+- Doctor Management persistence foundation in progress (models, validation, JDBC DAOs, transaction-ready user writes, role and department lookups); service and UI are pending
 - Hospital business modules beyond authentication are not yet implemented
 
 ## Authentication setup

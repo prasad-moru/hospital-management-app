@@ -1,0 +1,8 @@
+package com.hospital.management.dao.impl;
+import com.hospital.management.model.User;import org.junit.jupiter.api.Test;import java.sql.*;import static org.junit.jupiter.api.Assertions.*;import static org.mockito.ArgumentMatchers.*;import static org.mockito.Mockito.*;
+class UserDaoTransactionalTest{
+ @Test void createUsesSuppliedConnectionOnly()throws Exception{Connection c=mock(Connection.class);PreparedStatement p=mock(PreparedStatement.class);ResultSet keys=mock(ResultSet.class);when(c.prepareStatement(anyString(),any(String[].class))).thenReturn(p);when(p.getGeneratedKeys()).thenReturn(keys);when(keys.next()).thenReturn(true);when(keys.getLong(1)).thenReturn(9L);User u=user();assertEquals(9L,new UserDaoImpl().create(c,u));verify(c,never()).commit();verify(c,never()).rollback();verify(c,never()).close();}
+ @Test void identityPasswordAndStatusUpdatesBindAndReturnTrue()throws Exception{Connection c=mock(Connection.class);PreparedStatement p=mock(PreparedStatement.class);when(c.prepareStatement(anyString())).thenReturn(p);when(p.executeUpdate()).thenReturn(1);UserDaoImpl dao=new UserDaoImpl();assertTrue(dao.updateUserIdentity(c,1L,"name","e@x.invalid","ACTIVE"));assertTrue(dao.updatePassword(c,1L,"hash"));assertTrue(dao.updateStatus(c,1L,"INACTIVE"));verify(c,never()).commit();verify(c,never()).rollback();}
+ @Test void invalidStatusRejectedBeforeSql(){assertThrows(IllegalArgumentException.class,()->new UserDaoImpl().updateStatus(mock(Connection.class),1L,"DELETED"));}
+ private User user(){User u=new User();u.setUsername("doctor1");u.setPasswordHash("hash");u.setEmail("d@x.invalid");u.setRoleId(2L);u.setStatus("ACTIVE");return u;}
+}

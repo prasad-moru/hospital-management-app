@@ -1,0 +1,2 @@
+package com.hospital.management.util;import org.junit.jupiter.api.Test;import java.sql.SQLException;import static org.junit.jupiter.api.Assertions.*;
+class SqlExceptionUtilTest{@Test void detectsOracleUniqueViolationInChain(){SQLException first=new SQLException("outer","x",999);first.setNextException(new SQLException("unique","x",1));assertTrue(SqlExceptionUtil.isUniqueConstraintViolation(first));}@Test void rejectsOtherErrors(){assertFalse(SqlExceptionUtil.isUniqueConstraintViolation(new SQLException("other","x",942)));}}

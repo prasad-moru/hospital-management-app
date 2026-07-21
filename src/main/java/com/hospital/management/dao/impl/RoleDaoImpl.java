@@ -1,0 +1,3 @@
+package com.hospital.management.dao.impl;
+import com.hospital.management.dao.RoleDao;import com.hospital.management.util.DatabaseConnectionManager;import java.sql.*;import java.util.Optional;
+public class RoleDaoImpl implements RoleDao {public Optional<Long> findRoleIdByName(String name)throws SQLException{if(name==null||name.isBlank())return Optional.empty();try(Connection c=DatabaseConnectionManager.getConnection();PreparedStatement p=c.prepareStatement("SELECT ROLE_ID FROM ROLES WHERE UPPER(ROLE_NAME)=UPPER(?)")){p.setString(1,name.trim());try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(r.getLong(1)):Optional.empty();}}}}
