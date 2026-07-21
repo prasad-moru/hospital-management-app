@@ -149,6 +149,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Admin landing page and Department Management CRUD implemented
 - ADMIN Doctor Management implemented with list, search, filters, pagination, add, view, edit, activation, and deactivation
 - Patient Management implemented for ADMIN and RECEPTIONIST with optional linked login accounts
+- Doctor Schedule Management implemented for ADMIN and owning DOCTOR users
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -171,6 +172,10 @@ Department Management: `http://localhost:8080/online-hospital-management-system/
 Doctor Management: `http://localhost:8080/online-hospital-management-system/admin/doctors`
 
 Patient Management: `http://localhost:8080/online-hospital-management-system/admin/patients`
+
+Doctor Schedule Management: `http://localhost:8080/online-hospital-management-system/schedules`
+
+ADMIN may manage all doctor schedules; DOCTOR users may manage only their own. Overlap is prevented for every stored window on the same doctor/day. Schedule windows must divide exactly into 5-240 minute slots. This availability foundation is intended for future Appointment Management; it does not yet book or change appointments.
 
 For an existing database created before Patient Management, run `database/migrations/V005__patient_management_adjustments.sql` once as `HOSPITAL_APP`. A fresh reset using `schema.sql` already contains those objects; do not run the migration afterward.
 

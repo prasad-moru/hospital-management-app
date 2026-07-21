@@ -70,6 +70,9 @@ public class DoctorDaoImpl implements DoctorDao {
                 registrationNumber.trim());
     }
 
+    @Override public Optional<Doctor> findByUserId(Long userId)throws SQLException{return userId==null?Optional.empty():findOne("SELECT "+SELECT_COLUMNS+JOIN+" WHERE r.ROLE_NAME='DOCTOR' AND d.USER_ID=?",userId);}
+    @Override public List<Doctor> findActiveDoctors()throws SQLException{List<Doctor>x=new ArrayList<>();try(Connection c=DatabaseConnectionManager.getConnection();PreparedStatement s=c.prepareStatement("SELECT "+SELECT_COLUMNS+JOIN+" WHERE r.ROLE_NAME='DOCTOR' AND d.STATUS='ACTIVE' AND u.STATUS='ACTIVE' ORDER BY d.FIRST_NAME,d.LAST_NAME" );ResultSet r=s.executeQuery()){while(r.next())x.add(mapDoctor(r));}return x;}
+
     private Optional<Doctor> findOne(String sql, Object value) throws SQLException {
         try (Connection connection = DatabaseConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

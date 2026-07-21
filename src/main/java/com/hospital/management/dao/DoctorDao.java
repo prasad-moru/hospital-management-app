@@ -7,11 +7,14 @@ import com.hospital.management.model.PageRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.List;
 
 /** Persistence operations for doctor profiles and their joined reference data. */
 public interface DoctorDao {
     Optional<Doctor> findById(Long doctorId) throws SQLException;
     Optional<Doctor> findByRegistrationNumber(String registrationNumber) throws SQLException;
+    Optional<Doctor> findByUserId(Long userId) throws SQLException;
+    List<Doctor> findActiveDoctors() throws SQLException;
     Page<Doctor> findAll(PageRequest pageRequest, Long departmentId, String status) throws SQLException;
     long count(String searchTerm, Long departmentId, String status) throws SQLException;
     long createDoctorRecord(Connection connection, Doctor doctor) throws SQLException;

@@ -1,0 +1,8 @@
+flowchart LR
+ A[Admin / Doctor] --> S[Schedule Servlet] --> V[DoctorScheduleService]
+ V --> O{Own schedule or ADMIN?}
+ O -->|No| X[Access denied + audit]
+ O -->|Yes| C{Overlap?}
+ C -->|Yes| B[Blocked + audit]
+ C -->|No| D[DoctorScheduleDao / DoctorDao] --> DB[(Oracle)]
+ D --> E[Create / edit / activate / deactivate]
