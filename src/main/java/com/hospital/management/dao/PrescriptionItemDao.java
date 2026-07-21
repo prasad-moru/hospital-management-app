@@ -1,0 +1,1 @@
+package com.hospital.management.dao;import com.hospital.management.model.PrescriptionItem;import java.sql.*;import java.util.List;public interface PrescriptionItemDao {List<PrescriptionItem>findByPrescriptionId(Long id)throws SQLException;long createItem(Connection c,PrescriptionItem i)throws SQLException;int deleteByPrescriptionId(Connection c,Long id)throws SQLException;}

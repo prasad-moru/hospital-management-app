@@ -1,0 +1,15 @@
+flowchart TD
+ U[ADMIN / DOCTOR / PATIENT] --> C[Prescription Servlet]
+ C --> S[PrescriptionService]
+ S --> O{Ownership allowed?}
+ O -- No --> D[Access denied + audit]
+ O -- Yes --> M[MedicalRecordDao]
+ M --> Q{Prescription exists?}
+ Q -- Yes --> B[Duplicate block]
+ Q -- No --> T[Create transaction]
+ T --> H[PrescriptionDao header]
+ H --> I[PrescriptionItemDao items]
+ I --> DB[(Oracle XE)]
+ S --> E[Edit: update header + delete/replace items]
+ S --> ST[ACTIVE to COMPLETED/CANCELLED]
+ S --> P[Patient read-only / print flow]

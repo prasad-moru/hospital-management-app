@@ -1,0 +1,1 @@
+body{font-family:Arial,sans-serif;max-width:900px;margin:2rem auto}.header{text-align:center}.meta{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}table{width:100%;border-collapse:collapse;margin-top:1rem}th,td{border:1px solid #555;padding:.5rem}.signature{margin-top:5rem;text-align:right}@media print{.no-print{display:none}body{margin:0}}

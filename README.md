@@ -152,6 +152,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Doctor Schedule Management implemented for ADMIN and owning DOCTOR users
 - Appointment Management implemented with role/ownership enforcement, schedule-derived slots, conflict prevention, status workflow, and audit events
 - Medical Record and Diagnosis Management implemented with appointment eligibility, doctor/patient ownership, vital-sign validation, and one record per appointment
+- Prescription Management implemented with multiple medicine items, medical-record ownership, atomic item replacement, terminal status workflow, and printable views
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -180,6 +181,12 @@ Doctor Schedule Management: `http://localhost:8080/online-hospital-management-sy
 Appointment Management: `http://localhost:8080/online-hospital-management-system/appointments`
 
 Medical Records: `http://localhost:8080/online-hospital-management-system/medical-records`
+
+Prescriptions: `http://localhost:8080/online-hospital-management-system/prescriptions`
+
+ADMIN manages all prescriptions, DOCTOR manages prescriptions for their medical records, and PATIENT has read-only access to their own prescriptions. Each prescription requires a medical record and at least one medicine item. `UK_RX_MED_REC` enforces one prescription per record; creation and item replacement are transactional. `/prescriptions/print` provides an ownership-protected print view.
+
+Existing databases should run `database/migrations/V009__prescription_management.sql` once as `HOSPITAL_APP`. Fresh schemas already include the constraint and indexes.
 
 ADMIN can manage all medical records, DOCTOR can manage records for assigned appointments, and PATIENT has read-only access to their own records. New records require a `CONFIRMED` or `COMPLETED` appointment and inherit patient/doctor identity from it. Oracle constraint `UK_MED_REC_APPT` prevents more than one record per appointment.
 
@@ -211,7 +218,6 @@ Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse
 - Patient management
 - Doctor clinical workspace, schedules, and appointment workflow
 - Department management
-- Prescriptions
 - Billing and payments
 - Admission and discharge
 - Inventory

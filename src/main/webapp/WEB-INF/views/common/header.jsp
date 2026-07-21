@@ -5,7 +5,7 @@
             <a class="navbar-brand fw-semibold" href="${pageContext.request.contextPath}/">
                 Hospital Management
             </a>
-            <div class="d-flex align-items-center gap-3"><c:if test="${sessionScope.authenticatedUser.roleName=='ADMIN'||sessionScope.authenticatedUser.roleName=='DOCTOR'||sessionScope.authenticatedUser.roleName=='PATIENT'}"><a class="text-white text-decoration-none" href="${pageContext.request.contextPath}/medical-records">Medical Records</a></c:if><span class="navbar-text text-white-50 d-none d-md-inline">Care through technology</span></div>
+            <div class="d-flex align-items-center gap-3"><c:if test="${sessionScope.authenticatedUser.roleName=='ADMIN'||sessionScope.authenticatedUser.roleName=='DOCTOR'||sessionScope.authenticatedUser.roleName=='PATIENT'}"><a class="text-white text-decoration-none" href="${pageContext.request.contextPath}/medical-records">Medical Records</a><a class="text-white text-decoration-none" href="${pageContext.request.contextPath}/prescriptions">Prescriptions</a></c:if><span class="navbar-text text-white-50 d-none d-md-inline">Care through technology</span></div>
         </div>
     </nav>
 </header>
