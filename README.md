@@ -153,6 +153,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Appointment Management implemented with role/ownership enforcement, schedule-derived slots, conflict prevention, status workflow, and audit events
 - Medical Record and Diagnosis Management implemented with appointment eligibility, doctor/patient ownership, vital-sign validation, and one record per appointment
 - Prescription Management implemented with multiple medicine items, medical-record ownership, atomic item replacement, terminal status workflow, and printable views
+- Billing and Payments Management implemented with itemized bills, partial/full offline payments, ADMIN-only whole-payment refunds, ownership checks, and printable invoices/receipts
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -183,6 +184,12 @@ Appointment Management: `http://localhost:8080/online-hospital-management-system
 Medical Records: `http://localhost:8080/online-hospital-management-system/medical-records`
 
 Prescriptions: `http://localhost:8080/online-hospital-management-system/prescriptions`
+
+Billing and Payments: `http://localhost:8080/online-hospital-management-system/billing`
+
+ADMIN and BILLING_STAFF manage billing; RECEPTIONIST creates/views bills and records CASH payments; PATIENT has read-only access to their own bills and receipts. Bill and payment numbers come from Oracle sequences. Server formulas are `subtotal = sum(lines)`, `total = subtotal + tax - discount`, and `balance = total - successful payments`. Partial and full payments are supported. Only ADMIN may refund a complete payment. Invoices and receipts use ownership-protected print views.
+
+Existing databases should run `database/migrations/V010__billing_and_payments.sql` once as `HOSPITAL_APP` after V009. Fresh schemas already contain the billing sequences and indexes.
 
 ADMIN manages all prescriptions, DOCTOR manages prescriptions for their medical records, and PATIENT has read-only access to their own prescriptions. Each prescription requires a medical record and at least one medicine item. `UK_RX_MED_REC` enforces one prescription per record; creation and item replacement are transactional. `/prescriptions/print` provides an ownership-protected print view.
 
@@ -218,7 +225,6 @@ Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse
 - Patient management
 - Doctor clinical workspace, schedules, and appointment workflow
 - Department management
-- Billing and payments
 - Admission and discharge
 - Inventory
 - Reports

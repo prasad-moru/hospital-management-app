@@ -1,0 +1,1 @@
+package com.hospital.management.dao;import com.hospital.management.model.BillItem;import java.sql.*;import java.util.*;public interface BillItemDao{List<BillItem>findByBillId(Long id)throws SQLException;long createItem(Connection c,BillItem i)throws SQLException;int deleteByBillId(Connection c,Long id)throws SQLException;}

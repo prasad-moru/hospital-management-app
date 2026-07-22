@@ -1,0 +1,1 @@
+package com.hospital.management.util;import java.sql.*;import java.time.Year;/** Generates collision-safe payment numbers from an Oracle sequence. */public class PaymentNumberGenerator{public String next(Connection c)throws SQLException{return"PAY-"+Year.now().getValue()+"-"+String.format("%06d",BillNumberGenerator.nextValue(c,"PAYMENT_NUMBER_SEQ"));}}

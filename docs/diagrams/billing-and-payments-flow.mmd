@@ -1,0 +1,22 @@
+flowchart LR
+  A[ADMIN] --> S[Billing Servlets]
+  B[BILLING_STAFF] --> S
+  R[RECEPTIONIST] --> S
+  P[PATIENT read-only] --> S
+  S --> BS[BillService]
+  S --> PS[PaymentService]
+  BS --> BD[BillDao]
+  BS --> ID[BillItemDao]
+  PS -->|lock bill row| BD
+  PS --> PD[PaymentDao]
+  BD --> O[(Oracle XE)]
+  ID --> O
+  PD --> O
+  BS -->|transaction| C[Header + item insertion]
+  PS -->|transaction| T[Payment + financial summary]
+  T --> X{Amount exceeds locked balance?}
+  X -->|yes| Block[Block overpayment]
+  X -->|no| State[Partial or paid status]
+  A --> Refund[Whole-payment refund]
+  Refund --> PS
+  S --> Print[Invoice / receipt print]
