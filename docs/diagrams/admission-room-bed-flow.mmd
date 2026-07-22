@@ -1,0 +1,16 @@
+flowchart LR
+ A[Admin / Receptionist] --> S[Admission Servlets]
+ V[Doctor / Nurse / Patient / Billing read-only] --> S
+ S --> AS[AdmissionService]
+ AS --> AD[AdmissionDao]
+ AS --> BD[BedDao]
+ AS --> RD[RoomDao]
+ AS --> Bill[BillDao]
+ AD --> O[(Oracle XE)]
+ BD --> O
+ RD --> O
+ AS --> L{Lock admission and beds}
+ L -->|unavailable or duplicate| Block[Block operation]
+ L --> Admit[Admit + occupy]
+ L --> Transfer[Release + occupy + transfer history]
+ L --> Discharge[Discharge + release + room charge]

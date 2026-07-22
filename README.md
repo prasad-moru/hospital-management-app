@@ -154,6 +154,7 @@ The endpoint returns only `UP` or `DOWN` JSON and never exposes connection detai
 - Medical Record and Diagnosis Management implemented with appointment eligibility, doctor/patient ownership, vital-sign validation, and one record per appointment
 - Prescription Management implemented with multiple medicine items, medical-record ownership, atomic item replacement, terminal status workflow, and printable views
 - Billing and Payments Management implemented with itemized bills, partial/full offline payments, ADMIN-only whole-payment refunds, ownership checks, and printable invoices/receipts
+- Admission, Room and Bed Management implemented with locked allocation, transfer history, discharge/cancellation bed release, and room-charge calculation
 - Doctor account/profile writes use one linked `USERS` and `DOCTORS` JDBC transaction with BCrypt password hashing
 - Remaining clinical and hospital operations modules are pending
 
@@ -186,6 +187,14 @@ Medical Records: `http://localhost:8080/online-hospital-management-system/medica
 Prescriptions: `http://localhost:8080/online-hospital-management-system/prescriptions`
 
 Billing and Payments: `http://localhost:8080/online-hospital-management-system/billing`
+
+Admissions: `http://localhost:8080/online-hospital-management-system/admissions`
+
+Rooms: `http://localhost:8080/online-hospital-management-system/admin/rooms`
+
+Beds: `http://localhost:8080/online-hospital-management-system/admin/beds`
+
+ADMIN and RECEPTIONIST manage admission lifecycles. Assigned doctors, nurses, billing staff and owning patients have read-only access. Oracle row locking plus conditional unique indexes prevent duplicate active admissions and double bed allocation. Transfers and discharge release/occupy beds atomically. Existing databases should run `database/migrations/V011__admission_room_bed_management.sql` after V010.
 
 ADMIN and BILLING_STAFF manage billing; RECEPTIONIST creates/views bills and records CASH payments; PATIENT has read-only access to their own bills and receipts. Bill and payment numbers come from Oracle sequences. Server formulas are `subtotal = sum(lines)`, `total = subtotal + tax - discount`, and `balance = total - successful payments`. Partial and full payments are supported. Only ADMIN may refund a complete payment. Invoices and receipts use ownership-protected print views.
 
@@ -225,7 +234,6 @@ Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse
 - Patient management
 - Doctor clinical workspace, schedules, and appointment workflow
 - Department management
-- Admission and discharge
 - Inventory
 - Reports
 - Audit logs
