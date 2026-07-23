@@ -1,0 +1,9 @@
+.print-only{display:none}
+@media print{
+  nav,footer,.btn,form{display:none!important}
+  .print-only{display:block}
+  body{font-size:11pt;color:#000}
+  .container{max-width:none}
+  table{page-break-inside:auto}
+  tr{page-break-inside:avoid}
+}

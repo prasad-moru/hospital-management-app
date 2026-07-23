@@ -21,9 +21,7 @@
         <div class="col-md-4"><a class="card h-100 text-decoration-none" href="${pageContext.request.contextPath}/admissions"><div class="card-body"><h2 class="h5">Admissions</h2><p>Manage admissions, transfers and discharges.</p></div></a></div>
         <div class="col-md-4"><a class="card h-100 text-decoration-none" href="${pageContext.request.contextPath}/admin/rooms"><div class="card-body"><h2 class="h5">Rooms</h2><p>Manage hospital rooms and daily rates.</p></div></a></div>
         <div class="col-md-4"><a class="card h-100 text-decoration-none" href="${pageContext.request.contextPath}/admin/beds"><div class="card-body"><h2 class="h5">Beds</h2><p>Manage room beds and availability.</p></div></a></div>
-        <c:forEach items="${['Users','Reports']}" var="item">
-            <div class="col-md-4"><div class="card h-100 text-muted"><div class="card-body"><h2 class="h5"><c:out value="${item}"/></h2><span class="badge bg-secondary">Coming soon</span></div></div></div>
-        </c:forEach>
+        <div class="col-md-4"><a class="card h-100 text-decoration-none" href="${pageContext.request.contextPath}/admin/reports"><div class="card-body"><h2 class="h5">Reports</h2><p>View hospital analytics and export read-only reports.</p></div></a></div>
     </div>
 </main>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

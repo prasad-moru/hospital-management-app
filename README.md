@@ -1,6 +1,6 @@
 # Online Hospital Management System
 
-An MCA final-semester academic project providing a secure, maintainable web application for hospital administration. Authentication, core administration, Doctor Schedules, and Appointment Management are implemented.
+An MCA final-semester academic project providing a secure, maintainable web application for hospital administration. The planned submission scope, including read-only Reports and Analytics, is implemented.
 
 ## Technology stack
 
@@ -194,6 +194,19 @@ Rooms: `http://localhost:8080/online-hospital-management-system/admin/rooms`
 
 Beds: `http://localhost:8080/online-hospital-management-system/admin/beds`
 
+Reports and Analytics (ADMIN only): `http://localhost:8080/online-hospital-management-system/admin/reports`
+
+Specialized report routes:
+
+- `/admin/reports/appointments`
+- `/admin/reports/patients`
+- `/admin/reports/doctors`
+- `/admin/reports/admissions`
+- `/admin/reports/billing`
+- `/admin/reports/export?type=appointments`
+
+Reports default to the current month, accept safe date/department/doctor filters, provide aggregate CSV exports, and support print-friendly pages. They are read-only and exclude passwords, contact details, clinical narratives, and payment credentials.
+
 ADMIN and RECEPTIONIST manage admission lifecycles. Assigned doctors, nurses, billing staff and owning patients have read-only access. Oracle row locking plus conditional unique indexes prevent duplicate active admissions and double bed allocation. Transfers and discharge release/occupy beds atomically. Existing databases should run `database/migrations/V011__admission_room_bed_management.sql` after V010.
 
 ADMIN and BILLING_STAFF manage billing; RECEPTIONIST creates/views bills and records CASH payments; PATIENT has read-only access to their own bills and receipts. Bill and payment numbers come from Oracle sequences. Server formulas are `subtotal = sum(lines)`, `total = subtotal + tax - discount`, and `balance = total - successful payments`. Partial and full payments are supported. Only ADMIN may refund a complete payment. Invoices and receipts use ownership-protected print views.
@@ -228,12 +241,13 @@ For an optional demo doctor, generate a BCrypt hash locally, replace `REPLACE_WI
 
 Role paths are enforced by server-side filters: `/admin/*`, `/doctor/*`, `/nurse/*`, `/reception/*`, `/patient/*`, and `/billing/*`. ADMIN is accepted across all role areas. Security includes BCrypt, generic login errors, session renewal, 30-minute expiry, CSRF tokens, anti-caching/CSP headers, account locking, and audit events. Plain-text password storage is prohibited.
 
-## Planned modules
+## Optional future enhancements
 
-- Authentication and role management
-- Patient management
-- Doctor clinical workspace, schedules, and appointment workflow
-- Department management
-- Inventory
-- Reports
-- Audit logs
+- Inventory and pharmacy stock
+- Laboratory integration
+- Insurance claim processing
+- Online payment gateway
+- Notifications
+- Advanced analytics and visualization
+
+The application is feature-complete for the defined MCA submission scope. User Management is not part of that scope; the existing `USERS` table remains solely for authentication and linked role accounts.

@@ -1,0 +1,12 @@
+flowchart LR
+    A[ADMIN] --> F[Date and optional ID filters]
+    F --> S[Report Servlets]
+    S --> V[JSP summary and print views]
+    S --> RS[ReportService]
+    RS --> D[ReportDao: SELECT only]
+    D --> O[(Existing Oracle tables)]
+    A --> E[CSV Export Servlet]
+    E --> RS
+    E --> C[Formula-safe CSV]
+    E --> L[(Audit log: REPORT_EXPORTED)]
+    V --> P[External print CSS and JavaScript]

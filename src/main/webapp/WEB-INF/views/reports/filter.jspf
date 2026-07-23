@@ -1,0 +1,13 @@
+<c:if test="${empty printMode}">
+<form class="row g-2 align-items-end my-3" method="get">
+    <div class="col-md-3"><label class="form-label">From</label><input class="form-control ${not empty errors.dateFrom?'is-invalid':''}" type="date" name="dateFrom" value="<c:out value='${filter.dateFrom}'/>"><c:if test="${not empty errors.dateFrom}"><div class="invalid-feedback"><c:out value="${errors.dateFrom}"/></div></c:if></div>
+    <div class="col-md-3"><label class="form-label">To</label><input class="form-control ${not empty errors.dateTo?'is-invalid':''}" type="date" name="dateTo" value="<c:out value='${filter.dateTo}'/>"><c:if test="${not empty errors.dateTo}"><div class="invalid-feedback"><c:out value="${errors.dateTo}"/></div></c:if></div>
+    <div class="col-md-2"><label class="form-label">Department ID</label><input class="form-control" type="number" min="1" name="departmentId" value="<c:out value='${filter.departmentId}'/>"></div>
+    <div class="col-md-2"><label class="form-label">Doctor ID</label><input class="form-control" type="number" min="1" name="doctorId" value="<c:out value='${filter.doctorId}'/>"></div>
+    <div class="col-md-2"><button class="btn btn-primary">Apply</button> <a class="btn btn-outline-secondary" href="${pageContext.request.requestURI}">Clear</a></div>
+</form>
+<c:if test="${not empty errors.dateRange}"><div class="alert alert-danger"><c:out value="${errors.dateRange}"/></div></c:if>
+</c:if>
+<c:if test="${printMode}">
+    <p>Period: <c:out value="${filter.dateFrom}"/> to <c:out value="${filter.dateTo}"/> · Generated: <c:out value="${generatedAt}"/></p>
+</c:if>

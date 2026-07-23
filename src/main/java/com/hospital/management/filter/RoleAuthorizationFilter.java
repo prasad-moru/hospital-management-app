@@ -6,6 +6,7 @@ public class RoleAuthorizationFilter implements Filter{
  private final AuditLogDao audit;public RoleAuthorizationFilter(){this(new AuditLogDaoImpl());}public RoleAuthorizationFilter(AuditLogDao a){audit=a;}
  public void doFilter(ServletRequest a,ServletResponse b,FilterChain c)throws IOException,ServletException{HttpServletRequest q=(HttpServletRequest)a;HttpServletResponse r=(HttpServletResponse)b;String path=q.getRequestURI().substring(q.getContextPath().length());HttpSession s=q.getSession(false);if(s==null||!(s.getAttribute("authenticatedUser") instanceof AuthenticatedUser u)){if(json(path))json(r,403,"Authentication required");else r.sendRedirect(q.getContextPath()+"/login");return;}if(!allowed(path,u.getRoleName())){try{audit.recordEvent("ACCESS_DENIED",u.getUserId(),"PATH",null,q.getRemoteAddr(),q.getHeader("User-Agent"));}catch(RuntimeException ignored){}if(json(path))json(r,403,"Access denied");else r.sendError(403);return;}c.doFilter(a,b);}
  private boolean allowed(String p,String role){
+  if(p.equals("/admin/reports")||p.startsWith("/admin/reports/"))return"ADMIN".equals(role);
   if(p.equals("/admin/rooms")||p.equals("/admin/rooms/view"))return Set.of("ADMIN","BILLING_STAFF").contains(role);
   if(p.startsWith("/admin/rooms/"))return"ADMIN".equals(role);
   if(p.equals("/admin/beds")||p.equals("/admin/beds/view"))return Set.of("ADMIN","NURSE").contains(role);
