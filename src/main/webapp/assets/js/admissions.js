@@ -1,1 +1,61 @@
-document.addEventListener('DOMContentLoaded',function(){var f=document.getElementById('admissionForm'),bed=document.getElementById('bedId');if(!f||!bed)return;var dep=document.getElementById('departmentId'),type=document.getElementById('roomType'),base=f.dataset.contextPath;async function load(){bed.disabled=true;bed.replaceChildren(new Option('Loading available beds...',''));var q=new URLSearchParams();if(dep&&dep.value)q.set('departmentId',dep.value);if(type&&type.value)q.set('roomType',type.value);try{var r=await fetch(base+'/admissions/available-beds?'+q.toString());if(!r.ok)throw new Error('request failed');var x=await r.json();bed.replaceChildren();x.forEach(function(b){var o=new Option('Room '+b.roomNumber+' / Bed '+b.bedNumber+' / '+b.roomType+' / ₹'+b.dailyRate+' per day',String(b.bedId));bed.add(o);});if(!x.length)bed.add(new Option('No available beds',''));bed.disabled=!x.length;}catch(e){bed.replaceChildren(new Option('Unable to load available beds',''));bed.disabled=true;console.warn('Available beds request failed');}}if(dep)dep.addEventListener('change',load);if(type)type.addEventListener('change',load);load();});
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('admissionForm');
+    var bedSelect = document.getElementById('bedId');
+    if (!form || !bedSelect) {
+        return;
+    }
+
+    var department = document.getElementById('departmentId');
+    var roomType = document.getElementById('roomType');
+    var contextPath = form.dataset.contextPath;
+    var previouslySelectedBed = bedSelect.dataset.selected;
+
+    async function loadAvailableBeds() {
+        bedSelect.disabled = true;
+        bedSelect.replaceChildren(new Option('Loading available beds...', ''));
+
+        var parameters = new URLSearchParams();
+        if (department && department.value) {
+            parameters.set('departmentId', department.value);
+        }
+        if (roomType && roomType.value) {
+            parameters.set('roomType', roomType.value);
+        }
+
+        try {
+            var response = await fetch(contextPath + '/admissions/available-beds?' + parameters.toString());
+            if (!response.ok) {
+                throw new Error('Available-bed request returned HTTP ' + response.status);
+            }
+
+            var beds = await response.json();
+            bedSelect.replaceChildren();
+            beds.forEach(function (bed) {
+                var label = 'Room ' + bed.roomNumber + ' / Bed ' + bed.bedNumber
+                    + ' / ' + bed.roomType + ' / INR ' + bed.dailyRate + ' per day';
+                var option = new Option(label, String(bed.bedId));
+                if (previouslySelectedBed && String(bed.bedId) === previouslySelectedBed) {
+                    option.selected = true;
+                }
+                bedSelect.add(option);
+            });
+
+            if (!beds.length) {
+                bedSelect.add(new Option('No available beds for this department and room type', ''));
+            }
+            bedSelect.disabled = !beds.length;
+        } catch (exception) {
+            bedSelect.replaceChildren(new Option('Unable to load available beds', ''));
+            bedSelect.disabled = true;
+            console.warn('Available beds request failed');
+        }
+    }
+
+    if (department) {
+        department.addEventListener('change', loadAvailableBeds);
+    }
+    if (roomType) {
+        roomType.addEventListener('change', loadAvailableBeds);
+    }
+    loadAvailableBeds();
+});
