@@ -1,0 +1,1 @@
+package com.hospital.management.dao;import com.hospital.management.model.AdmissionTransfer;import java.sql.*;import java.util.*;public interface AdmissionTransferDao{List<AdmissionTransfer>findByAdmissionId(Long id)throws SQLException;long create(Connection c,AdmissionTransfer t)throws SQLException;}

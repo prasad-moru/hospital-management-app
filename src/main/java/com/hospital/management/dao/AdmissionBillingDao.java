@@ -1,0 +1,1 @@
+package com.hospital.management.dao;import com.hospital.management.model.Admission;import java.math.BigDecimal;import java.sql.*;public interface AdmissionBillingDao{long postRoomCharge(Connection c,Admission admission,long days,BigDecimal rate,BigDecimal charge)throws SQLException;}
